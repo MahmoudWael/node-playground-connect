@@ -40,7 +40,7 @@ var assets = function (req, res) {
                     return;
                 }
                 files[filePath] = {
-                    ext: filePath.split(':').pop(),
+                    ext: filePath.split('.').pop(),
                     content: data
                 }
                 serve(files[filePath]);
@@ -48,6 +48,7 @@ var assets = function (req, res) {
         }
     }
     readFile(path.normalize(__dirname + req.url));
+    console.log(files);
 }
 
 
