@@ -6,3 +6,4 @@ form button { width: 9%; background: rgb(84, 241, 103); border: none; padding: 1
 #messages { list-style-type: none; margin: 0; padding: 0; }
 #messages li { padding: 5px 10px; }
 #messages li:nth-child(odd) { background: #eee; }
+#connected-users > tr > td{ border: 2px solid black; padding: 2px;}

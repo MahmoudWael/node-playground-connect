@@ -1,15 +1,25 @@
-module.exports = function (io) {
+export default function (io) {
+    var users = {};
     io.on('connection', (socket) => {
         console.log('a new user has conncted!');
-        socket.emit('user-connected');
-    });
-    io.on('disconnect', function (socket) {
-        console.log('user disconnected');
-        socket.emit('user-disconnected');
-    });
+        socket.broadcast.emit('user-connected');
 
-    io.on('chat message', function (socket) {
-        console.log('message: ' + msg);
-        socket.emit('chat message', msg);
+        socket.on('send-username', function (username) {
+            socket.username = username;
+            users[username] = username;
+            io.emit('update-usernames', users)
+        });
+
+        socket.on('chat message', function (msgData) {
+            socket.broadcast.emit('chat message', msgData);
+        });
+
+        socket.on('disconnecting', () => {
+            console.log('user disconnected');
+            delete users[socket.username];
+            io.emit('update-usernames', users)
+            io.emit('user-disconnected');
+        });
+
     });
 }

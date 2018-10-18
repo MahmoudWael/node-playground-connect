@@ -7,7 +7,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/chat', function (req, res, next) {
-  res.render('chat');
+  res.render('chat', {username: req.query.username});
 });
 
 module.exports = router;
