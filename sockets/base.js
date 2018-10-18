@@ -1,12 +1,12 @@
 export default function (io) {
     var users = {};
+    
     io.on('connection', (socket) => {
         console.log('a new user has conncted!');
-        socket.broadcast.emit('user-connected');
-
         socket.on('send-username', function (username) {
             socket.username = username;
             users[username] = username;
+            socket.broadcast.emit('user-connected', username);
             io.emit('update-usernames', users)
         });
 
@@ -18,7 +18,7 @@ export default function (io) {
             console.log('user disconnected');
             delete users[socket.username];
             io.emit('update-usernames', users)
-            io.emit('user-disconnected');
+            io.emit('user-disconnected', socket.username);
         });
 
     });

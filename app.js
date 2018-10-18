@@ -6,13 +6,26 @@ import logger from 'morgan';
 
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
+import chatRouter from './routes/chat';
+import session from 'express-session';
 
 
 var app = express();
 
 var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-//mongoDB connection 
+// express-session
+app.use(session({
+  key: 'user_sid',
+  secret: 'somerandonstuffs',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    expires: 600000
+  }
+}));
+
+// mongodb connection 
 var config = require('./config/config')[env];
 require('./config/mongoose')(config);
 
@@ -22,11 +35,24 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+
+//redirect if not logged in
+app.use(function (req, res, next) {
+  if (req.session.user) {    
+    next();
+  } else {
+    res.redirect('/login');
+  }
+});
+
+app.use('/chat', chatRouter)
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
