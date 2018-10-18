@@ -1,5 +1,5 @@
 import User from '../models/User';
-    
+
 export function getUser(username) {
-    return User.find({}).exec();
+    return User.find({username}).exec();
 }
