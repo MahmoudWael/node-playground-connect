@@ -3,7 +3,8 @@ var router = express.Router();
 
 router.get('/', function (req, res, next) {
   res.render('chat', {
-    username: req.session.user[0].username
+    username: req.session.user[0].username,
+    privateUser: req.query.private
   });
 });
 
