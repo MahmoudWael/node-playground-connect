@@ -15,6 +15,9 @@
             </tbody>
         </table>
     </div>
+    <div>
+        <span id="user-notify"></span>
+    </div>
     <ul id="messages"></ul>
     <form action="">
         <input id="m" autocomplete="off" /><button>Send</button>
@@ -35,13 +38,28 @@
                     text: $('#m').val()
                 };
                 socket.emit('chat message', msg);
-                $('#messages').append($('<li>').text(msg.name + ': ' +msg.text));
+                $('#messages').append($('<li>').text(msg.name + ': ' + msg.text));
                 $('#m').val('');
             }
             return false;
         });
+
+        var timeout;
+        var typing;
+        function typingTimeoutFunction() {
+            typing = false;
+            socket.emit('user-typing', false);
+        }
+
+        $('#m').on('keyup', function (e) {
+            typing = true
+            socket.emit('user-typing', typing);
+            clearTimeout(timeout);
+            timeout = setTimeout(typingTimeoutFunction, 2000);
+        });
+
         socket.on('chat message', (msg) => {
-            $('#messages').append($('<li>').text(msg.name + ': ' +msg.text));
+            $('#messages').append($('<li>').text(msg.name + ': ' + msg.text));
         })
         socket.on('user-connected', (username) => {
             $('#messages').append($('<li>').text(username + ' has joined!'));
@@ -53,6 +71,19 @@
             $('#users-tr').html('');
             for (const username in users) {
                 $('#users-tr').append($('<td>').text(users[username]));
+            }
+        })
+        socket.on('update-usernames', (users) => {
+            $('#users-tr').html('');
+            for (const username in users) {
+                $('#users-tr').append($('<td>').text(users[username]));
+            }
+        })
+        socket.on('notify-typing', (username, isTyping) => {
+            if (isTyping === true) {
+                $('#user-notify').text(username + ' is typing!');
+            } else {
+                $('#user-notify').text('');
             }
         })
     });

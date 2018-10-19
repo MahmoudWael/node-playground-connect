@@ -14,6 +14,9 @@ export default function (io) {
             socket.broadcast.emit('chat message', msgData);
         });
 
+        socket.on('user-typing', (isTyping) => {
+            socket.broadcast.emit('notify-typing', socket.username, isTyping)
+        })
         socket.on('disconnecting', () => {
             console.log('user disconnected');
             delete users[socket.username];
