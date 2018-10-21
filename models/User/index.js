@@ -4,9 +4,13 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        unique: true,
+        unique: false,
         validate: [{ validator: validateUsername, msg: 'Invalid username' }]
     },
+    email: {
+        type: String,
+        unique: true,
+    }
 }, { timestamps: true });
 
 const user = mongoose.model('User', userSchema);
