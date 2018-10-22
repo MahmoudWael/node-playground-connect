@@ -2,7 +2,7 @@ import User from '../models/User/index'
 import fs from 'fs'
 import path from 'path'
 import mongoose from 'mongoose'
-import esConnection from '../elasticsearch'
+// import esConnection from '../elasticsearch'
 
 mongoose.connect('mongodb://localhost/test', {
     useNewUrlParser: true
@@ -21,7 +21,7 @@ var readFileAsync = function(filename) {
 
 async function readAndProcess() {
     let content = await readFileAsync('../users.json', "utf8")
-    insertUserData(JSON.parse(content))
+    // insertUserData(JSON.parse(content))
     seedUSers(JSON.parse(content))
 }
 
