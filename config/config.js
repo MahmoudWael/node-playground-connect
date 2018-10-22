@@ -4,7 +4,7 @@ var rootPath = path.normalize(__dirname + '/../../');
 module.exports = {
 	development: {
 		rootPath: rootPath,
-		db: 'mongodb://localhost/test',
+		db: 'mongodb://mongodb:27017/test',
 		port: process.env.PORT || 27017
 	},
 	production: {

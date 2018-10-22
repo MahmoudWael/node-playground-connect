@@ -7,8 +7,10 @@ import logger from 'morgan';
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 import chatRouter from './routes/chat';
-import session from 'express-session';
+import searchRouter from './routes/search';
 
+
+import session from 'express-session';
 
 var app = express();
 
@@ -42,16 +44,18 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/search', searchRouter);
 
 //redirect if not logged in
 app.use(function (req, res, next) {
-  if (req.session.user) {    
+  if (req.session.user) {
     next();
   } else {
     res.redirect('/login');
   }
 });
 
+// routers
 app.use('/chat', chatRouter)
 app.use('/users', usersRouter);
 
